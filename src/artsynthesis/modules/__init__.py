@@ -2,6 +2,7 @@ from artsynthesis.modules.multi_stream import MultiStream, MultiStreamConfig
 from artsynthesis.modules.pause_resume import PauseResume, PauseResumeConfig
 from artsynthesis.modules.feedback import FeedbackIntegration, FeedbackConfig, FeedbackType
 from artsynthesis.modules.reference_search import ReferenceMaterialSearch, ReferenceSearchConfig, ReferenceMaterial
+from artsynthesis.modules.model_manager import ModelManager
 
 __all__ = [
     "MultiStream",
@@ -14,4 +15,5 @@ __all__ = [
     "ReferenceMaterialSearch",
     "ReferenceSearchConfig",
     "ReferenceMaterial",
+    "ModelManager",
 ]

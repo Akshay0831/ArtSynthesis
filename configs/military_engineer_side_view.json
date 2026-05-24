@@ -1,58 +1,44 @@
 {
-  "metadata": {
-    "name": "Military Engineer",
-    "aesthetic": "Cyberpunk neon, side-view, high-contrast, Katana Zero inspired",
-    "generation_resolution": 768
+  "globals": {
+    "model": "sdxl",
+    "num_streams": 1,
+    "quantization": "none",
+    "device": "auto"
   },
-  "generation_config": {
-    "steps": 40,
-    "guidance_scale": 7.5
-  },
-  "parts": {
-    "head": {
-      "positive_prompt": "side profile cyberpunk soldier head, high contrast neon lighting, tactical helmet hints",
-      "negative_prompt": "front view, realistic, blurry, low quality",
-      "output_size": [30, 30]
+  "pipeline": [
+    {
+      "name": "engineer_base",
+      "type": "text_to_image",
+      "prompt": "Cyberpunk military engineer, side view, tactical armor, high-contrast neon lighting, Katana Zero aesthetic, detailed sprite art",
+      "negative_prompt": "front view, blurry, low quality, distorted",
+      "params": {
+        "width": 768,
+        "height": 768,
+        "steps": 40,
+        "guidance_scale": 7.5
+      }
     },
-    "head_goggles": {
-      "positive_prompt": "cyberpunk tactical goggles over eyes, side profile, neon glow, high tech",
-      "negative_prompt": "realistic, front view, blurry",
-      "output_size": [30, 30]
-    },
-    "head_helmet": {
-      "positive_prompt": "military tactical helmet side profile, cyberpunk style, high contrast, neon",
-      "negative_prompt": "realistic, blurry, front view",
-      "output_size": [30, 30]
-    },
-    "torso": {
-      "positive_prompt": "cyberpunk military tactical suit torso, side view, armor plating, neon accents",
-      "negative_prompt": "realistic, front view, blurry, low quality",
-      "output_size": [48, 48]
-    },
-    "arm_left": {
-      "positive_prompt": "cyberpunk armored left arm, side profile, tactical gear, gloves",
-      "negative_prompt": "realistic, front view, blurry",
-      "output_size": [40, 40]
-    },
-    "arm_right": {
-      "positive_prompt": "cyberpunk armored right arm, side profile, tactical gear, weapon ready",
-      "negative_prompt": "realistic, front view, blurry",
-      "output_size": [40, 40]
-    },
-    "leg_left": {
-      "positive_prompt": "cyberpunk tactical leg armor, side view, high contrast, neon details",
-      "negative_prompt": "realistic, blurry, front view",
-      "output_size": [96, 96]
-    },
-    "leg_right": {
-      "positive_prompt": "cyberpunk tactical leg armor, side view, high contrast, neon details",
-      "negative_prompt": "realistic, blurry, front view",
-      "output_size": [96, 96]
-    },
-    "revolver": {
-      "positive_prompt": "cyberpunk revolver weapon, side profile, neon glow, high tech",
-      "negative_prompt": "realistic, blurry, complex",
-      "output_size": [40, 40]
+    {
+      "name": "segmentation",
+      "type": "segmentation",
+      "input_source": "engineer_base"
     }
+  ],
+  "layout": {
+    "canvas_width": 768,
+    "canvas_height": 768,
+    "parts": [
+      {"name": "head", "x": 0, "y": 0, "width": 128, "height": 128},
+      {"name": "torso", "x": 128, "y": 0, "width": 128, "height": 128},
+      {"name": "arm_left", "x": 256, "y": 0, "width": 128, "height": 128},
+      {"name": "arm_right", "x": 384, "y": 0, "width": 128, "height": 128},
+      {"name": "leg_left", "x": 0, "y": 128, "width": 128, "height": 128},
+      {"name": "leg_right", "x": 128, "y": 128, "width": 128, "height": 128},
+      {"name": "weapon", "x": 256, "y": 128, "width": 128, "height": 128}
+    ]
+  },
+  "export": {
+    "formats": ["png"],
+    "output_dir": "./output"
   }
 }

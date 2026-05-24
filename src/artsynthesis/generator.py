@@ -57,7 +57,7 @@ class GenerationOrchestrator:
         if not is_valid:
             raise ValueError(f"Invalid configuration: {errors}")
         
-        if not self.config.generation.enable_multi_stream and len(seeds) > 1:
+        if not self.config.globals.enable_multi_stream and len(seeds) > 1:
             raise ValueError("Multi-stream disabled in config, provide single seed")
         
         self.logger.LogInfo(f"Starting batch generation: {len(seeds)} seeds, {self.num_streams} streams")
@@ -143,10 +143,8 @@ class GenerationOrchestrator:
             "stream_id": stream_id,
             "seed": pipeline.state.seed,
             "state": pipeline.state.state.value,
-            "stage": pipeline.state.current_stage,
-            "hero_generated": pipeline.state.hero_generated,
-            "sheet_complete": pipeline.state.sheet_complete,
-            "rig_complete": pipeline.state.rig_complete,
+            "stage": pipeline.state.current_stage_index,
+            "completed_stages": pipeline.state.completed_stages,
         }
     
     def Finalize(self) -> None:

@@ -1,5 +1,5 @@
 from artsynthesis.generator import GenerationOrchestrator, GenerationFeedback
-from artsynthesis.pipeline import SpriteGenerationPipeline, GenerationOptions
+from artsynthesis.pipeline import SpriteGenerationPipeline
 from artsynthesis.config import (
     ConfigLoader,
     ConfigValidator,
@@ -19,7 +19,6 @@ __all__ = [
     "GenerationOrchestrator",
     "SpriteGenerationPipeline",
     "GenerationFeedback",
-    "GenerationOptions",
     "ConfigLoader",
     "ConfigValidator",
     "ArtGenerationConfig",

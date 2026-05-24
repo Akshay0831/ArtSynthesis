@@ -1,13 +1,40 @@
 {
-  "generation": {
+  "globals": {
     "model": "sdxl",
     "num_streams": 1,
-    "seed_strategy": "design_variation",
-    "enable_pause_resume": true,
-    "enable_feedback": true,
-    "enable_reference_search": true,
-    "ip_adapter_mode": "dual"
+    "quantization": "none",
+    "device": "auto",
+    "enable_multi_stream": true
   },
+  "pipeline": [
+    {
+      "name": "base_character",
+      "type": "text_to_image",
+      "prompt": "Professional sci-fi humanoid character illustration, full body, cinematic lighting, high detail, concept art style",
+      "negative_prompt": "blurry, low quality, distorted, deformed, extra limbs, overlapping parts",
+      "params": {
+        "width": 1024,
+        "height": 1024,
+        "steps": 30,
+        "guidance_scale": 7.5
+      }
+    },
+    {
+      "name": "refinement",
+      "type": "image_to_image",
+      "input_source": "base_character",
+      "prompt": "Highly detailed textures, polished surfaces, professional color grading",
+      "params": {
+        "strength": 0.3,
+        "steps": 20
+      }
+    },
+    {
+      "name": "segmentation",
+      "type": "segmentation",
+      "input_source": "refinement"
+    }
+  ],
   "layout": {
     "canvas_width": 1024,
     "canvas_height": 1024,
@@ -25,16 +52,9 @@
       {"name": "weapon", "x": 512, "y": 256, "width": 256, "height": 256}
     ]
   },
-  "prompts": {
-    "hero": "Professional sci-fi character illustration",
-    "negative": "blurry, low quality, distorted, deformed"
-  },
   "export": {
-    "formats": ["png", "depth", "metadata"],
-    "output_dir": "./output"
-  },
-  "references": {
-    "enable_search": true,
-    "index_path": "./references"
+    "formats": ["png"],
+    "output_dir": "./output",
+    "save_intermediate": true
   }
 }

@@ -16,11 +16,8 @@ class CheckpointManager:
             "stream_id": stream_state.stream_id,
             "seed": stream_state.seed,
             "state": stream_state.state.value,
-            "current_stage": stream_state.current_stage,
-            "completed_regions": stream_state.completed_regions,
-            "hero_generated": stream_state.hero_generated,
-            "sheet_complete": stream_state.sheet_complete,
-            "rig_complete": stream_state.rig_complete,
+            "current_stage_index": stream_state.current_stage_index,
+            "completed_stages": stream_state.completed_stages,
             "error_message": stream_state.error_message,
         }
         
@@ -43,11 +40,8 @@ class CheckpointManager:
                 stream_id=data.get("stream_id", 0),
                 seed=data.get("seed", 0),
                 state=GenerationState(data.get("state", "idle")),
-                current_stage=data.get("current_stage", 0),
-                completed_regions=data.get("completed_regions", []),
-                hero_generated=data.get("hero_generated", False),
-                sheet_complete=data.get("sheet_complete", False),
-                rig_complete=data.get("rig_complete", False),
+                current_stage_index=data.get("current_stage_index", 0),
+                completed_stages=data.get("completed_stages", []),
                 error_message=data.get("error_message"),
             )
         except (json.JSONDecodeError, KeyError, ValueError) as e:

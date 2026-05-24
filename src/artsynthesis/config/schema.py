@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -14,9 +14,35 @@ class QuantizationType(Enum):
     NONE = "none"
 
 
-class SeedStrategy(Enum):
-    DESIGN_VARIATION = "design_variation"
-    RANDOM = "random"
+class StageType(Enum):
+    TEXT_TO_IMAGE = "text_to_image"
+    IMAGE_TO_IMAGE = "image_to_image"
+    INPAINTING = "inpainting"
+    SEGMENTATION = "segmentation"
+    DEPTH_EXTRACTION = "depth_extraction"
+    BACKGROUND_REMOVAL = "background_removal"
+    UPSCALE = "upscale"
+
+
+@dataclass
+class StageConfig:
+    name: str
+    type: StageType
+    prompt: str = ""
+    negative_prompt: str = ""
+    input_source: Optional[str] = None  # Name of a previous stage
+    params: dict[str, Any] = field(default_factory=dict)
+
+    @staticmethod
+    def from_dict(data: dict) -> "StageConfig":
+        return StageConfig(
+            name=data.get("name", "unnamed_stage"),
+            type=StageType(data.get("type", "text_to_image")),
+            prompt=data.get("prompt", ""),
+            negative_prompt=data.get("negative_prompt", ""),
+            input_source=data.get("input_source"),
+            params=data.get("params", {}),
+        )
 
 
 @dataclass
@@ -26,35 +52,7 @@ class PartDefinition:
     y: int
     width: int
     height: int
-
-
-@dataclass
-class GenerationConfig:
-    model: ModelType = ModelType.SDXL
-    enable_multi_stream: bool = True
-    num_streams: int = 1
-    seed_strategy: SeedStrategy = SeedStrategy.DESIGN_VARIATION
-    enable_pause_resume: bool = True
-    enable_feedback: bool = True
-    enable_reference_search: bool = True
-    enable_rl_training: bool = False
-    ip_adapter_mode: str = "dual"
-    quantization: QuantizationType = QuantizationType.NONE
-    
-    @staticmethod
-    def from_dict(data: dict) -> "GenerationConfig":
-        return GenerationConfig(
-            model=ModelType(data.get("model", "sdxl")),
-            enable_multi_stream=data.get("enable_multi_stream", True),
-            num_streams=data.get("num_streams", 1),
-            seed_strategy=SeedStrategy(data.get("seed_strategy", "design_variation")),
-            enable_pause_resume=data.get("enable_pause_resume", True),
-            enable_feedback=data.get("enable_feedback", True),
-            enable_reference_search=data.get("enable_reference_search", True),
-            enable_rl_training=data.get("enable_rl_training", False),
-            ip_adapter_mode=data.get("ip_adapter_mode", "dual"),
-            quantization=QuantizationType(data.get("quantization", "none")),
-        )
+    parent: Optional[str] = None
 
 
 @dataclass
@@ -76,60 +74,73 @@ class LayoutConfig:
 
 
 @dataclass
-class PromptConfig:
-    hero: str = ""
-    negative: str = ""
-    regional_overrides: dict[str, str] = field(default_factory=dict)
-    
-    @staticmethod
-    def from_dict(data: dict) -> "PromptConfig":
-        return PromptConfig(
-            hero=data.get("hero", ""),
-            negative=data.get("negative", ""),
-            regional_overrides=data.get("regional_overrides", {}),
-        )
-
-
-@dataclass
 class ExportConfig:
     formats: list[str] = field(default_factory=lambda: ["png"])
     output_dir: str = "./output"
+    save_intermediate: bool = True
     
     @staticmethod
     def from_dict(data: dict) -> "ExportConfig":
         return ExportConfig(
             formats=data.get("formats", ["png"]),
             output_dir=data.get("output_dir", "./output"),
+            save_intermediate=data.get("save_intermediate", True),
         )
+
+
+class SeedStrategy(Enum):
+    FIXED = "fixed"
+    RANDOM = "random"
+    DESIGN_VARIATION = "design_variation"
+
+
+@dataclass
+class PromptConfig:
+    positive: str = ""
+    negative: str = ""
 
 
 @dataclass
 class ReferenceConfig:
     enable_search: bool = True
     index_path: str = "./references"
+
+
+@dataclass
+class GlobalConfig:
+    model: ModelType = ModelType.SDXL
+    quantization: QuantizationType = QuantizationType.NONE
+    device: str = "auto"
+    enable_multi_stream: bool = True
+    num_streams: int = 1
+    enable_pause_resume: bool = True
+    model_paths: dict[str, str] = field(default_factory=dict)
     
     @staticmethod
-    def from_dict(data: dict) -> "ReferenceConfig":
-        return ReferenceConfig(
-            enable_search=data.get("enable_search", True),
-            index_path=data.get("index_path", "./references"),
+    def from_dict(data: dict) -> "GlobalConfig":
+        return GlobalConfig(
+            model=ModelType(data.get("model", "sdxl")),
+            quantization=QuantizationType(data.get("quantization", "none")),
+            device=data.get("device", "auto"),
+            enable_multi_stream=data.get("enable_multi_stream", True),
+            num_streams=data.get("num_streams", 1),
+            enable_pause_resume=data.get("enable_pause_resume", True),
+            model_paths=data.get("model_paths", {}),
         )
 
 
 @dataclass
 class ArtGenerationConfig:
-    generation: GenerationConfig = field(default_factory=GenerationConfig)
-    layout: LayoutConfig = field(default_factory=LayoutConfig)
-    prompts: PromptConfig = field(default_factory=PromptConfig)
+    globals: GlobalConfig = field(default_factory=GlobalConfig)
+    pipeline: list[StageConfig] = field(default_factory=list)
+    layout: Optional[LayoutConfig] = None
     export: ExportConfig = field(default_factory=ExportConfig)
-    references: ReferenceConfig = field(default_factory=ReferenceConfig)
     
     @staticmethod
     def from_dict(data: dict) -> "ArtGenerationConfig":
         return ArtGenerationConfig(
-            generation=GenerationConfig.from_dict(data.get("generation", {})),
-            layout=LayoutConfig.from_dict(data.get("layout", {})),
-            prompts=PromptConfig.from_dict(data.get("prompts", {})),
+            globals=GlobalConfig.from_dict(data.get("globals", {})),
+            pipeline=[StageConfig.from_dict(s) for s in data.get("pipeline", [])],
+            layout=LayoutConfig.from_dict(data.get("layout", {})) if "layout" in data else None,
             export=ExportConfig.from_dict(data.get("export", {})),
-            references=ReferenceConfig.from_dict(data.get("references", {})),
         )
