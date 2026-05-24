@@ -1,0 +1,35 @@
+{
+  "generation": {
+    "model": "flux",
+    "num_streams": 2,
+    "seed_strategy": "random",
+    "enable_pause_resume": true,
+    "enable_feedback": true,
+    "enable_reference_search": false,
+    "ip_adapter_mode": "single"
+  },
+  "layout": {
+    "canvas_width": 1024,
+    "canvas_height": 1024,
+    "parts": [
+      {"name": "head", "x": 0, "y": 0, "width": 256, "height": 256},
+      {"name": "torso", "x": 256, "y": 0, "width": 512, "height": 512},
+      {"name": "arm_l", "x": 0, "y": 256, "width": 256, "height": 256},
+      {"name": "arm_r", "x": 768, "y": 0, "width": 256, "height": 256},
+      {"name": "leg_l", "x": 0, "y": 512, "width": 256, "height": 512},
+      {"name": "leg_r", "x": 256, "y": 512, "width": 256, "height": 512}
+    ]
+  },
+  "prompts": {
+    "hero": "Sci-fi robot character with metallic finish",
+    "negative": "organic, soft, biological, human-like"
+  },
+  "export": {
+    "formats": ["png"],
+    "output_dir": "./output"
+  },
+  "references": {
+    "enable_search": false,
+    "index_path": "./references"
+  }
+}

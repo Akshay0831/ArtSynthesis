@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "name": "Military Engineer",
+    "aesthetic": "Cyberpunk neon, side-view, high-contrast, Katana Zero inspired",
+    "generation_resolution": 768
+  },
+  "generation_config": {
+    "steps": 40,
+    "guidance_scale": 7.5
+  },
+  "parts": {
+    "head": {
+      "positive_prompt": "side profile cyberpunk soldier head, high contrast neon lighting, tactical helmet hints",
+      "negative_prompt": "front view, realistic, blurry, low quality",
+      "output_size": [30, 30]
+    },
+    "head_goggles": {
+      "positive_prompt": "cyberpunk tactical goggles over eyes, side profile, neon glow, high tech",
+      "negative_prompt": "realistic, front view, blurry",
+      "output_size": [30, 30]
+    },
+    "head_helmet": {
+      "positive_prompt": "military tactical helmet side profile, cyberpunk style, high contrast, neon",
+      "negative_prompt": "realistic, blurry, front view",
+      "output_size": [30, 30]
+    },
+    "torso": {
+      "positive_prompt": "cyberpunk military tactical suit torso, side view, armor plating, neon accents",
+      "negative_prompt": "realistic, front view, blurry, low quality",
+      "output_size": [48, 48]
+    },
+    "arm_left": {
+      "positive_prompt": "cyberpunk armored left arm, side profile, tactical gear, gloves",
+      "negative_prompt": "realistic, front view, blurry",
+      "output_size": [40, 40]
+    },
+    "arm_right": {
+      "positive_prompt": "cyberpunk armored right arm, side profile, tactical gear, weapon ready",
+      "negative_prompt": "realistic, front view, blurry",
+      "output_size": [40, 40]
+    },
+    "leg_left": {
+      "positive_prompt": "cyberpunk tactical leg armor, side view, high contrast, neon details",
+      "negative_prompt": "realistic, blurry, front view",
+      "output_size": [96, 96]
+    },
+    "leg_right": {
+      "positive_prompt": "cyberpunk tactical leg armor, side view, high contrast, neon details",
+      "negative_prompt": "realistic, blurry, front view",
+      "output_size": [96, 96]
+    },
+    "revolver": {
+      "positive_prompt": "cyberpunk revolver weapon, side profile, neon glow, high tech",
+      "negative_prompt": "realistic, blurry, complex",
+      "output_size": [40, 40]
+    }
+  }
+}

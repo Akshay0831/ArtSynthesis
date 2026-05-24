@@ -1,0 +1,20 @@
+[project]
+name = "artsynthesis"
+version = "0.1.0"
+description = "Professional stand-alone art generation engine using SDXL and FLUX."
+dependencies = [
+    "torch>=2.3.0",
+    "diffusers>=0.27.0",
+    "transformers>=4.40.0",
+    "accelerate>=0.30.0",
+    "pillow>=10.3.0",
+    "pyyaml>=6.0.1",
+    "psutil>=5.9.8",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
